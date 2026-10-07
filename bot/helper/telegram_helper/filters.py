@@ -87,12 +87,14 @@ class CustomFilters:
         if not Config.STREMIO_USERS and not stremio_users:
             return True
         user = update.from_user or update.sender_chat
-        uid = user.id
+        uid = user.id if user else 0
+        chat_id = update.chat.id if update.chat else 0
         return bool(
             uid == Config.OWNER_ID
             or (uid in user_data and user_data[uid].get("SUDO"))
             or uid in sudo_users
             or uid in stremio_users
+            or chat_id in stremio_users
         )
 
     stremio = create(stremio_user)
